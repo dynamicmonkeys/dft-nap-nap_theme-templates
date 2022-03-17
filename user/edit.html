@@ -1,0 +1,76 @@
+{% ckan_extends %}
+
+{% block breadcrumb_content %}
+    {% if is_myself %}
+    <li class="govuk-breadcrumbs__list-item">{{ h.nav_link(_('Your account'), named_route='user.read', id=c.userobj.name) }}</li>
+    {% else %}
+    <li class="govuk-breadcrumbs__list-item">{{ h.nav_link(user_dict.name, named_route='user.read', id=user_dict.name) }}</li>
+    {% endif %}
+    <li class="govuk-breadcrumbs__list-item">{{ _("Edit")}}</li>
+{% endblock %}
+
+{% block main_section_content %}
+    <section class="module">
+        <div class="module-content">
+            <form action="{{ action }}" method="post" enctype="multipart/form-data">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                      <h1 class="govuk-fieldset__heading">
+                        {{_("Edit account")}}
+                      </h1>
+                    </legend>
+                  
+                    <div class="govuk-form-group">
+                      <input class="govuk-input" id="field-username" name="name" type="hidden" value={{user_dict.name}}>
+                    </div>
+                  
+                    <div class="govuk-form-group">
+                        <label class="govuk-label" for="field-fullname">
+                            {{_("Full name")}}
+                          </label>
+                          <input class="govuk-input" id="fieldfullname" name="fullname" type="text" value={{user_dict.fullname}}>
+                    </div>
+                  
+                    <div class="govuk-form-group">
+                        <label class="govuk-label" for="field-email">
+                            {{_("Email")}}
+                          </label>
+                          <input class="govuk-input" id="field-email" name="email" type="text" value={{user_dict.email}}>
+                    </div>
+                </fieldset>
+            {% if is_myself %}
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                      <h1 class="govuk-fieldset__heading">
+                        {{_("Change your password")}}
+                      </h1>
+                    </legend>
+                  
+                    <div class="govuk-form-group">
+                        <label class="govuk-label govuk-label govuk-!-margin-top-5" for="field-confirm-password">
+                            {{_("Your current password")}}
+                        </label>
+                        <input class="govuk-input" id="field-confirm-password" name="old_password" type="password">
+                    </div>
+                  
+                    <div class="govuk-form-group">
+                        <label class="govuk-label govuk-label" for="field-password">
+                            {{_("Create a new password")}}
+                        </label>
+                        <span class="govuk-caption-m">{{_("Passwords must be at least 12 characters long. Do not re-use passwords used for other accounts.")}}</span>
+                        <input class="govuk-input" id="field-password" name="password1" type="password">
+                    </div>
+                  
+                    <div class="govuk-form-group">
+                        <label class="govuk-label govuk-label govuk-!-margin-top-5" for="field-confirm-password">
+                            {{_("Confirm your new password")}}
+                        </label>
+                        <input class="govuk-input" id="field-confirm-password" name="password2" type="password" >
+                    </div>
+                </fieldset>
+            {% endif %}
+                <button class="govuk-button govuk-!-margin-top-4" name="save" data-module="govuk-button" type="submit">{{ _('Update account') }}</button>
+            </form>
+        </div>
+    </section>
+{% endblock %}

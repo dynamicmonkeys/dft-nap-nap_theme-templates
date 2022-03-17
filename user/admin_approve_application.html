@@ -1,0 +1,82 @@
+{% extends "page.html" %}
+{% block title %}Administrator dashboard - {{ super() }}{% endblock %}
+{% block breadcrumb_content %}
+<li class="govuk-breadcrumbs__list-item">
+  <a class='govuk-breadcrumbs__link' href="{{h.url_for('nap_theme.admin_applications')}}">{{ _('Administrator dashboard') }}</a>
+</li>
+<li class="govuk-breadcrumbs__list-item">{{ _('Approve application') }}</li>
+{% endblock %}
+{% block main_section_content %}
+<h1 class="govuk-heading-l">{{_('Approve data publisher application')}}</h1>
+<h2 class="govuk-heading-m">{{_("To approve the data publisher application below select their organisation form the list and click Approve")}}</h2>
+<!-- govuk errors -->
+{% if error_summary %}
+  <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="govuk-error-summary">
+    <h2 class="govuk-error-summary__title" id="error-summary-title">
+      There is a problem
+    </h2>
+    <div class="govuk-error-summary__body">
+      <ul class="govuk-list govuk-error-summary__list">
+
+      {% set ns= namespace(last_error = '') %}
+        {% for key, error in error_summary.items() %}
+        <li>
+          {% if error !=  ns.last_error %}
+            <a href="#{{key.lower().replace(' ','-')}}-error">{{error}}</a>
+          {% endif %}
+          {% set ns.last_error = error %}
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+{% endif %}
+{% snippet 'user/snippets/user_application.html', user=user %}
+<form 
+  action="{{ h.url_for('nap_theme.admin_application_approved') }}" 
+  method="post"
+>
+  <input 
+  id="id" 
+  name="id" 
+  type="hidden"
+  value="{{user.id}}" 
+  />
+
+  <div class="govuk-form-group">
+    <label class="govuk-label" for="field-organizations">
+      <h3 class="govuk-heading-s">
+        {{_("Organisation")}}
+      </h3>
+    </label>
+    {% set organizations_available = h.organizations_available('create_dataset') %}
+    {% set error_class = 'govuk-select--error' if 'organization' in error_summary else '' %}
+    {% if 'organization' in error_summary %}
+    <span id="organization-error" class="govuk-error-message">
+      <span class="govuk-visually-hidden">Error:</span> {{error_summary['organization']}}
+    </span>
+    {% endif %}
+    <select class="govuk-select {{error_class}}" id="field-organizations" name="organization">
+      <option value="">{{_("Select an organisation ")}}</option>
+      {% for organization in organizations_available %}
+      <option value="{{ organization.id }}">{{
+        organization.display_name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="govuk-button-group">
+    <button 
+      id="approve_application_button" 
+      class="govuk-button govuk-!-margin-bottom-2"
+      data-module="govuk-button"
+       type="submit">
+      {{_("Approve") }}
+    </button>
+    <a data-prevent-double-click="true" class="govuk-button govuk-button--secondary govuk-!-margin-bottom-2"
+      data-module="govuk-button" href="{{h.url_for('nap_theme.admin_applications')}}"
+      role="button">
+      {{_("Cancel")}}
+    </a>
+  </div>
+</form>
+{% endblock %}

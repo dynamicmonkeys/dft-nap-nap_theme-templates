@@ -1,0 +1,144 @@
+{% extends "page.html" %}
+
+{% block feedback_url %}
+  "https://docs.google.com/forms/d/e/1FAIpQLSc3lXHpRz0oQG0gtrMsplIL5Ky1mlHmVMNaS4frjDKt6BU07A/viewform"
+{% endblock %}
+
+{% block breadcrumb %}
+  {% block breadcrumb_content %}
+    <!-- No breadcrumbs on home page -->
+  {% endblock %}
+{% endblock %}
+
+{% block main_section_content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <section class="module">
+      <div class="module-content">
+        <span class="govuk-caption-l" style="color: #1d70b8; font-weight: 700;">{{_("Find road transport data")}}</span>
+        <h1 class="govuk-heading-xl govuk-!-margin-bottom-6">
+        {% block page_heading %}
+        {{_('Find out what UK roads data exists and how you can access it')}}
+        {% endblock %}
+        </h1>
+        <span class="govuk-caption-l">
+          {{_('This is a metadata catalogue that lists public and private datasets about roads in the UK.')}}
+        </span>
+        <form class="" action="/dataset/" method="get">
+          <div class="govuk-form-group govuk-body govuk-!-margin-top-6 govuk-!-margin-bottom-0" data-children-count="1">
+            <input 
+              id="home-search" 
+              type="search" 
+              class="govuk-input nap-search-text govuk-input--width-20" 
+              name="q" 
+              placeholder="Search for datasets" 
+              aria-label="Search for datasets"
+              autofocus
+            >
+            <button 
+              type="submit" 
+              class="govuk-button nap-search-button govuk-!-margin-bottom-3" 
+              data-module="govuk-button" 
+              aria-label="Search Button"
+            >
+              <i class="fa fa-search"></i>
+            </button>
+          </div>
+        </form>
+
+        <p class="govuk-body govuk-!-margin-top-1">{{_("Or")}}</p>
+
+        <div class="govuk-form-group">
+          <a 
+            data-prevent-double-click="true" 
+            class="govuk-button" 
+            data-module="govuk-button" 
+            href="{{ h.url_for('dataset.search') }}"
+            role="button"
+          >
+            {{_('Browse datasets')}}
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <h3 class="govuk-heading-m">{{_("What datasets does this catalogue signpost me to?")}}</h3>
+    <p class="govuk-body">
+      {{_("This catalogue signposts you to data about roads in the United Kingdom. The metadata entries have been published by a range of public and private users. The datasets vary in content and quality.")}}
+    </p>
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+
+    <h3 class="govuk-heading-m">{{_("Not all of the datasets are free or open")}}</h3>
+    <p class="govuk-body">
+      {{_("Some datasets can only be accessed by certain users for specific purposes. You may have to pay or apply for a license to access these datasets. You can find this information in the metadata entries in this catalogue.")}}
+    </p>
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+
+    <h3 class="govuk-heading-m">{{_("What is a metadata entry?")}}</h3>
+    <p class="govuk-body">
+      {{_("This catalogue does not hold datasets. It is a list of entries about datasets that are stored elsewhere. The metadata entries describe:")}} 
+    </p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>{{_("What is in a dataset")}}</li>
+      <li>{{_("Where you can find a dataset")}}</li>
+      <li>{{_("Who can access the dataset and how")}}</li>
+    </ul>
+  </div>
+  <div class="govuk-grid-column-one-third">
+    <div style="border-top: 3px solid #1d70b8; padding-top: 10px; margin-top: 45px;">
+      <div class="govuk-form-group">
+        {% set authorised_user = h.organizations_available('create_dataset') or h.check_config_permission('ckan.auth.create_unowned_dataset') %}
+        {% if c.userobj and authorised_user %}
+          <h2 class="govuk-heading-m">
+            {{_('You’re signed in')}}
+          </h2>
+          {% set not_authorised_user = not h.organizations_available('create_dataset') and not h.check_config_permission('ckan.auth.create_unowned_dataset') %}
+          {% if not_authorised_user%}
+          <p class="govuk-body">
+            {{_('You have not yet been approved to add metadata entries')}}
+          </p>
+          {% else %}
+          <p class="govuk-body">
+            {{_('Tell us about your data and where it is so we can help people find it')}}
+          </p>
+          <a 
+            data-prevent-double-click="true" 
+            class="govuk-button govuk-button--secondary" 
+            data-module="govuk-button" 
+            href="{{ h.url_for('dataset.new') }}"
+            role="button"
+          >
+              {{_('Create metadata entry')}}
+          </a>
+          {% endif %}
+        {% else %}
+          <h2 class="govuk-heading-m">
+            {{_('Sign in to create a metadata entry')}}
+          </h2>
+          <p class="govuk-body">
+              {{_('Tell us about your data and where it is so we can help people find it')}}
+          </p>
+          <div class="govuk-button-group">
+            <a 
+              data-prevent-double-click="true" 
+              class="govuk-button govuk-button--secondary" 
+              data-module="govuk-button" 
+              href="{{ h.url_for('/user/login') }}"
+              role="button"
+            >
+                {{_('Sign in')}}
+            </a>
+            {% if h.nap_theme_get_create_account_feature_flag() %}
+              <a class="govuk-link" href="{{ h.url_for('/user/register') }}">
+                {{_('or create an account')}}
+              </a>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+

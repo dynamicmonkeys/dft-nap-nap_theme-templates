@@ -1,0 +1,62 @@
+{% ckan_extends %}
+
+{% block breadcrumb_content %}
+  <li class="govuk-breadcrumbs__list-item">{{ h.nav_link(_('Sign in'), named_route='user.login') }}</li>
+  <li class="govuk-breadcrumbs__list-item">{{ _('Password reset') }}</li>
+{% endblock %}
+
+{% block title %}Reset password - {{ super() }}{% endblock %}
+{% set messages = h.flash.pop_messages() %}
+{% set error_summary = messages|selectattr("category","equalto","alert-error") | list %}
+{% set success_summary = messages|selectattr("category","equalto","alert-success") | list %}
+
+{% block main_section_content %}
+  <section class="module">
+    <div class="module-content">
+      {% if error_summary %}
+        <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="govuk-error-summary">
+          <h2 class="govuk-error-summary__title" id="error-summary-title">
+            {{_("There is a problem")}}
+          </h2>
+          <div class="govuk-error-summary__body">
+            <ul class="govuk-list govuk-error-summary__list">
+              {% for message in error_summary %}
+              <li>
+                <a href="#field-email">{{message}}</a>
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      {% endif %}
+      {% if success_summary %}
+        <div class="govuk-panel govuk-panel--confirmation">
+          <h1 class="govuk-panel__title">
+              {% for message in success_summary%}
+              {{message }}
+              {% endfor %}
+          </h1>
+      </div>
+      {% endif %}
+      {% block form %}
+        {% if error_summary %}
+            <div class="govuk-form-group govuk-form-group--error">
+        {% else %}
+            <div class="govuk-form-group">
+        {% endif %}
+          <form action="{{ action }}" method="post">
+              <h1 class="govuk-heading-xl govuk-!-margin-bottom-6">
+                  {{_("Recover your password")}}
+              </h1>
+              
+              <label class="govuk-label govuk-label" for="field-email">
+              {{_("Email address")}}
+              </label>
+              <input class="govuk-input" id="field-email" name="user" type="text" autofocus>
+              <button class="govuk-button govuk-!-margin-top-4" data-module="govuk-button" type="submit">{{ _('Email me a recovery link') }}</button>
+          </form>
+        </div>
+      {% endblock %}
+    </div>
+  </section>
+{% endblock %}

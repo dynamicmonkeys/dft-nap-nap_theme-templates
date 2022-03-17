@@ -1,0 +1,114 @@
+{#
+Displays a single of dataset.
+
+package        - A package to display.
+item_class     - The class name to use on the list item.
+hide_resources - If true hides the resources (default: false).
+banner         - If true displays a popular banner (default: false).
+truncate       - The length to trucate the description to (default: 180)
+truncate_title - The length to truncate the title to (default: 80).
+
+Example:
+
+  {% snippet 'snippets/package_item.html', package=c.datasets[0] %}
+
+#}
+{% set truncate = truncate or 180 %}
+{% set truncate_title = truncate_title or 80 %}
+{% set title = package.title or package.name %}
+{% set notes = h.markdown_extract(package.notes, extract_length=truncate) %}
+
+{% block package_item %}
+<div class="govuk-grid-row">
+    {% block content %}
+      <div class="govuk-grid-column-full">
+        {% block heading %}
+        <h3 class="govuk-heading-m govuk-!-margin-bottom-2">
+            {% block heading_private %}
+            {% endblock %}
+            {% block heading_title %}
+		          {{ 
+                h.link_to(h.truncate(title, truncate_title), 
+                h.url_for('%s.read' % package.type, id=package.name), 
+                class='govuk-link govuk-link--no-visited-state') 
+              }}
+            {% endblock %}
+            {% block heading_meta %}
+            {% endblock %}
+          </h3>
+        {% endblock %}
+
+        {% block additional_details %}
+        <dl class="govuk-summary-list govuk-summary-list--no-border">
+          {% if(package.data_available == "no") %}
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key govuk-!-margin-bottom-0">
+              {{_("Availability:")}}
+            </dt>
+            <dd class="govuk-summary-list__value govuk-!-padding-0">
+              {{ _("Not released") }}
+            </dd>
+          </div>
+          {% endif %}
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key govuk-!-margin-bottom-0 govuk-!-padding-0">
+              {{_("Location:")}}
+            </dt>
+            <dd class="govuk-summary-list__value govuk-!-padding-0">
+              {{ package.location }}
+            </dd>
+          </div>
+          {% set time_period = h.nap_theme_get_time_period(package) %}
+          {% if time_period != "" %}
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key govuk-!-margin-bottom-0 govuk-!-padding-0">
+              {{_("Time period:")}}
+            </dt>
+            <dd class="govuk-summary-list__value govuk-!-padding-0">
+              {{time_period}}
+            </dd>
+          </div>
+          {% endif %}
+          {% if package.regularly_updated == "yes"%}
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key govuk-!-margin-bottom-0 govuk-!-padding-0">
+              {{_("Update frequency:")}}
+            </dt>
+            <dd class="govuk-summary-list__value govuk-!-padding-0">
+              {{ h.nap_theme_get_update_frequency_name(package.update_frequency) }}
+            </dd>
+          </div>
+          {% endif %}
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key govuk-!-margin-bottom-0 govuk-!-padding-0">
+              {{_("Organisation:")}} 
+            </dt>
+            <dd class="govuk-summary-list__value govuk-!-padding-0">
+              {{ package.organization.title }}
+            </dd>
+          </div>
+        </dl>
+        {% set licence_type = h.nap_theme_get_licence_type(package.license_id)%}
+        <ul class="nap-tag-list govuk-list">
+          {% if licence_type != "" %}
+          <li>
+            <span class="govuk-tag nap-tag">{{licence_type}}</span>
+          </li>
+          {% endif %}
+          {% for topic in package.topics %}
+          <li>
+            <span class="govuk-tag nap-tag">
+              {{ topic }}
+            </span>
+          </li>
+          {% endfor %}
+        </ul>       
+        <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-16" style="float:right;" href="{{h.url_for('%s.read' % package.type, id=package.name)}}">View dataset</a>
+        {% endblock %}
+
+        {% block notes %}
+        {% endblock %}
+      </div>
+    {% endblock %}
+ </div>
+{% endblock %}

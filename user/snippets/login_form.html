@@ -1,0 +1,60 @@
+{% import 'macros/form.html' as form %}
+
+{% set username_error = true if error_summary %}
+{% set password_error = true if error_summary %}
+{% if error_summary %}
+<div class="govuk-form-group govuk-form-group--error">
+{% else %}
+<div class="govuk-form-group">
+{% endif %}
+  <form action="{{ action }}" method="post">
+    <div class="govuk-form-group govuk-!-margin-top-6 ">
+      <fieldset class="govuk-fieldset govuk-!-padding-bottom-3" role="group" aria-describedby="login-hint">
+        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+          <span class="govuk-caption-l" style="color: #1d70b8; font-weight: 700;">{{_("Sign in to create a metadata entry")}}</span>
+          <h1 class="govuk-heading-xl govuk-!-margin-bottom-6">
+            {{_('Sign in')}}
+            </h1>
+          </legend>
+          <span class="govuk-caption-l">
+            {{_('Enter the sign in details provided to you.')}}
+          </span>
+        {% if error_summary%}
+          <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="govuk-error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">
+              There is a problem
+            </h2>
+            <div class="govuk-error-summary__body">
+              <ul class="govuk-list govuk-error-summary__list">
+                {% for error_message in error_summary%}
+                <li>
+                  <a href="#field-login">{{error_message | replace("Login failed. Bad username or password.","Enter a correct username and password")}}</a>
+                </li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+        {% endif %}
+        <div class="govuk-form-group">
+          <h1 class="govuk-label-wrapper">
+            <label class="govuk-label govuk-label--l" for="field-login">
+              {{_("Username")}}
+            </label>
+          </h1>
+          <input class="govuk-input {% if username_error %}govuk-input--error{% endif %}" id="field-login" name="login" type="text" aria-label="username" autofocus>
+        </div>
+        <div class="govuk-form-group">
+          <h1 class="govuk-label-wrapper">
+            <label class="govuk-label govuk-label--l" for="field-password">
+              {{_("Password")}}
+            </label>
+          </h1>
+          <input class="govuk-input {% if password_error %}govuk-input--error {% endif %}" id="field-password" name="password" type="password" aria-label="password">
+        </div>        
+      </fieldset>
+      {% block login_button %}
+        <button class="govuk-button" data-module="govuk-button" type="submit">{{ _('Sign in') }}</button>
+      {% endblock %}
+  </div>
+  </form>
+

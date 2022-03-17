@@ -1,0 +1,69 @@
+{% ckan_extends %}
+
+{% block breadcrumb_content %}
+    {% if is_myself %}
+        <li class="govuk-breadcrumbs__list-item">{{ h.nav_link(_('Your account'), named_route='user.read', id=c.userobj.name) }}</li>
+    {% else %}
+        <li class="govuk-breadcrumbs__list-item">{{ h.nav_link(user_dict.name, named_route='user.read', id=user_dict.name) }}</li>
+    {% endif %}
+{% endblock %}
+
+{% block main_section_content %}
+    <section class="module">
+        <div class="module-content">
+            <h1 class="govuk-heading-xl govuk-!-margin-bottom-6">
+                {% if is_myself %}
+                    {{_('Your account')}}
+                {% else %}
+                    {{ user_dict.name }} {{ _('account')}}
+                {% endif %}
+            </h1>
+            
+            <dl class="govuk-summary-list govuk-summary-list--no-border govuk-!-margin-bottom-2">
+                <div class="govuk-summary-list__row">
+                  <dt class="govuk-summary-list__key govuk-!-padding-0 govuk-!-padding-bottom-1">
+                    {{_("Name:")}}
+                  </dt>
+                  <dd class="govuk-summary-list__value govuk-!-padding-0 govuk-!-padding-bottom-1">
+                    {{user_dict.fullname}}
+                  </dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                  <dt class="govuk-summary-list__key govuk-!-padding-0 govuk-!-padding-bottom-1">
+                    {{_("Email address:")}}
+                  </dt>
+                  <dd class="govuk-summary-list__value govuk-!-padding-0 govuk-!-padding-bottom-1">
+                    {{user_dict.email}}
+                  </dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                  <dt class="govuk-summary-list__key govuk-!-padding-0 govuk-!-padding-bottom-1">
+                    {{_("Username:")}}
+                  </dt>
+                  <dd class="govuk-summary-list__value govuk-!-padding-0 govuk-!-padding-bottom-1">
+                    {{user_dict.name}}
+                  </dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                  <dt class="govuk-summary-list__key govuk-!-padding-0 govuk-!-padding-bottom-1">
+                    {{_("Organisation:")}}
+                  </dt>
+                  <dd class="govuk-summary-list__value govuk-!-padding-0 govuk-!-padding-bottom-1">
+                    {{user_dict.image_url}}
+                  </dd>
+                </div>
+            </dl>
+            {% if is_myself or is_sysadmin %}
+                <a 
+                    data-prevent-double-click="true" 
+                    class="govuk-button" 
+                    data-module="govuk-button" 
+                    href="{{ h.url_for('user.edit', id=user_dict.name) }}"
+                    role="button"
+                >
+                    {{_('Edit account')}}
+                </a>
+            {% endif %}
+        </div>
+    </section>
+{% endblock %}

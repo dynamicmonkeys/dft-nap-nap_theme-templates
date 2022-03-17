@@ -1,0 +1,171 @@
+{#
+Displays a single of dataset.
+
+package        - A package to display.
+item_class     - The class name to use on the list item.
+hide_resources - If true hides the resources (default: false).
+banner         - If true displays a popular banner (default: false).
+truncate       - The length to trucate the description to (default: 180)
+truncate_title - The length to truncate the title to (default: 80).
+
+Example:
+
+  {% snippet 'snippets/package_item.html', package=c.datasets[0] %}
+
+#}
+{% set truncate = truncate or 180 %}
+{% set truncate_title = truncate_title or 80 %}
+{% set title = package.title or package.name %}
+
+{% block package_item %}
+<div class="govuk-grid-row">
+    {% block content %}
+      <div class="govuk-grid-column-two-thirds">
+        {% block heading %}
+        <h3 class="govuk-heading-m govuk-!-margin-bottom-2">
+            {% block heading_private %}
+              {% if package.private %}
+                <span class="dataset-private label label-inverse">
+                    <i class="fa fa-lock"></i>
+                    {{ _('Private') }}
+                </span>
+              {% endif %}
+            {% endblock %}
+            {% block heading_title %}
+		          {{ 
+                h.link_to(h.truncate(title, truncate_title), 
+                h.url_for('%s.read' % package.type, id=package.name), 
+                class='govuk-link govuk-link--no-visited-state') 
+              }}
+            {% endblock %}
+            {% block heading_meta %}
+            {% endblock %}
+          </h3>
+        {% endblock %}
+
+        {% block banner %}
+          {% if banner %}
+            <span class="banner">{{ _('Popular') }}</span>
+          {% endif %}
+        {% endblock %}
+
+        {% block additional_details %}
+          <dl class="govuk-summary-list govuk-summary-list--no-border">
+            {% if(package.data_available == "no") %}
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key govuk-!-margin-bottom-0">
+                {{_("Availability:")}}
+              </dt>
+              <dd class="govuk-summary-list__value govuk-!-padding-0">
+                {{ _("Not released") }}
+              </dd>
+            </div>
+            {% endif %}
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key govuk-!-margin-bottom-0 govuk-!-padding-0">
+                {{_("Location:")}}
+              </dt>
+              <dd class="govuk-summary-list__value govuk-!-padding-0">
+                {{ package.location }}
+              </dd>
+            </div>
+            {% set time_period = h.nap_theme_get_time_period(package) %}
+            {% if time_period != "" %}
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key govuk-!-margin-bottom-0 govuk-!-padding-0">
+                {{_("Time period:")}}
+              </dt>
+              <dd class="govuk-summary-list__value govuk-!-padding-0">
+                {{time_period}}
+              </dd>
+            </div>
+            {% endif %}
+            {% if package.regularly_updated == "yes"%}
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key govuk-!-margin-bottom-0 govuk-!-padding-0">
+                {{_("Update frequency:")}}
+              </dt>
+              <dd class="govuk-summary-list__value govuk-!-padding-0">
+                {{ h.nap_theme_get_update_frequency_name(package.update_frequency) }}
+              </dd>
+            </div>
+            {% endif %}
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key govuk-!-margin-bottom-0 govuk-!-padding-0">
+                {{_("Organisation:")}} 
+              </dt>
+              <dd class="govuk-summary-list__value govuk-!-padding-0">
+                {{ package.organization.title }}
+              </dd>
+            </div>
+          </dl>
+          {% set licence_type = h.nap_theme_get_licence_type(package.license_id)%}
+          <ul class="nap-tag-list govuk-list">
+            {% if licence_type != "" %}
+            <li>
+              <span class="govuk-tag nap-tag">{{licence_type}}</span>
+            </li>
+            {% endif %}
+            {% for topic in package.topics %}
+            <li>
+              <span class="govuk-tag nap-tag">
+                {{ topic }}
+              </span>
+            </li>
+            {% endfor %}            
+          </ul>
+        {% endblock %}
+
+        {% block notes %}
+        {% endblock %}
+      </div>
+      <div class="govuk-grid-column-one-third">
+          <div class="govuk-caption-s govuk-!-font-size-16 govuk-!-margin-bottom-0 nap-alt-color nap-align-right" >
+            <span class="govuk-!-font-weight-bold">
+              {{_("Originally published:")}}
+            </span>
+            {{ h.nap_theme_get_date_formatted(package.metadata_created,'%d/%m/%Y') }}
+          </div>
+          <div class="govuk-caption-s govuk-!-font-size-16 govuk-!-margin-bottom-0 nap-alt-color nap-align-right">
+            <span class="govuk-!-font-weight-bold">
+              {{_("Last updated:")}}
+            </span>
+            {{ h.nap_theme_get_date_formatted(package.metadata_modified,'%d/%m/%Y') }}
+          </div>
+          <div class="govuk-button-group govuk-body govuk-!-margin-bottom-0 govuk-body govuk-!-margin-top-9" style="float: right;">
+            <a class="govuk-button govuk-!-margin-bottom-0" data-module="govuk-button" href="{{ url_for('dataset.edit', id=package.id) }}">{{_('Edit')}}</a>
+            <button class="govuk-button govuk-button--warning dataset-delete-button" data-module="govuk-button" onclick='openDeleteConfirm("delete-confirm-{{package.id}}")'>
+              {{_("Delete")}}
+            </button>
+        </div>
+      </div>
+    {% endblock %}
+ </div>
+ <div class="govuk-grid-row govuk-body">
+  <div class="govuk-grid-column-full">
+    <div class="nap-delete-confirm-collapser" id="delete-confirm-{{package.id}}">
+      <div class="nap-delete-confirm-container govuk-!-padding-5 govuk-!-margin-top-7 govuk-!-margin-bottom-5">
+        <form id="confirm-dataset-delete-form" class="confirm-delete-form">
+          <input type="hidden" id="deleteId{{package.id}}" name="id" value="{{package.id}}">
+
+          <fieldset class="govuk-fieldset">
+            <label class="govuk-label" for="delete-confirm">
+              <h3 class="govuk-heading-m">
+                {{_("Deleting this metadata entry is permanent and can't be undone.")}}
+              </h3>
+            </label>
+            <div class="govuk-button-group" id="delete-confirm">
+              <button class="govuk-button govuk-button--secondary govuk-!-margin-right-3" data-module="govuk-button" type="button" onclick='closeDeleteConfirm("delete-confirm-{{package.id}}")'>
+                {{_("Cancel")}}
+              </button>
+              <button class="govuk-button govuk-button--warning" type="submit" data-module="govuk-button" data-dataset="{{package.id}}">
+                {{_("Delete metadata entry")}}
+              </button>
+            </div>
+          </fieldset>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

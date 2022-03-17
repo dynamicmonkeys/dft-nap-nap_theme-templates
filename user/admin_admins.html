@@ -1,0 +1,65 @@
+{% extends "page.html" %}
+{% block title %}Administrator dashboard - {{ super() }}{% endblock %}
+{% block breadcrumb_content %}
+<li class="govuk-breadcrumbs__list-item">{{ _('Administrator dashboard') }}</li>
+{% endblock %}
+{% block main_section_content %}
+{% asset 'nap_theme/delete_confirm_js' %}
+<h1 class="govuk-heading-l">{{_('Administrator dashboard')}}</h1>
+<div class="govuk-grid-row">
+    {% snippet 'user/snippets/admin_links.html', current_page = 'admin_admins' %}
+    <div class="govuk-grid-column-two-thirds">
+        <h2 class="govuk-heading-m">{{_("Admin users")}} ({{users | length}})</h2>
+        {% for user in users %}
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+        {% snippet 'user/snippets/user_application.html', user=user %}
+        <div class="govuk-button-group">
+            <a 
+            data-prevent-double-click="true" 
+            class="govuk-button" 
+            data-module="govuk-button" 
+            href="{{ h.url_for('user.edit', id=user.name) }}"
+            role="button"
+          >
+            {{_('Edit')}}
+          </a>
+            {% if h.check_access('user_delete', {'id': user.id})  %}
+                <button class="govuk-button govuk-button--warning dataset-delete-button" data-module="govuk-button" onclick='openDeleteConfirm("delete-confirm-{{user.id}}")'>
+                    {{_("Delete")}}
+                </button>
+            {% endif %}
+        </div>
+        {% if h.check_access('user_delete', {'id': user.id})  %}
+        <div class="govuk-grid-row govuk-body">
+          <div class="govuk-grid-column-full">
+            <div class="nap-delete-confirm-collapser" id="delete-confirm-{{user.id}}">
+              <div class="nap-delete-confirm-container govuk-!-padding-5 govuk-!-margin-top-7 govuk-!-margin-bottom-5">
+                <form action="{% url_for 'nap_theme.admin_delete_user' %}" method="POST">
+                  <input type="hidden" id="user_{{user.id}}" name="id" value="{{user.id}}">
+                  <input type="hidden" id="return_to_{{user.id}}" name="return_to" value="admin_admins">
+                  <fieldset class="govuk-fieldset">
+                    <label class="govuk-label" for="delete-confirm">
+                      <h3 class="govuk-heading-m">
+                        {{_("Deleting this user entry is permanent and can't be undone.")}}
+                      </h3>
+                    </label>
+                    <div class="govuk-button-group" id="delete-confirm">
+                      <button class="govuk-button govuk-button--secondary govuk-!-margin-right-3" data-module="govuk-button" type="button" onclick='closeDeleteConfirm("delete-confirm-{{user.id}}")'>
+                        {{_("Cancel")}}
+                      </button>
+                      <button class="govuk-button govuk-button--warning" type="submit">
+                        {{_("Delete user account")}}
+                      </button>
+                    </div>
+                  </fieldset>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+        {% endfor %}
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+    </div>
+</div>
+{% endblock %}

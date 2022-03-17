@@ -1,0 +1,27 @@
+{% ckan_extends %}
+
+{% block breadcrumb_content %}
+  <li class="govuk-breadcrumbs__list-item">{{ h.nav_link(_('Sign in'), named_route='user.login') }}</li>
+{% endblock %}
+{% set error_summary = h.flash.pop_messages() | list%}
+
+{% block title %}Sign in - {{ super() }}{% endblock %}
+{% block main_section_content %}
+  <section class="module">
+    <div class="module-content">
+
+      {% block form %}
+        {% snippet "user/snippets/login_form.html", action=g.login_handler, error_summary=error_summary %}
+      {% endblock %}
+
+      {% if h.nap_theme_get_create_account_feature_flag() %}
+        <p class="govuk-body">{{_("You can")}} {{ h.nav_link(_('create an account'), named_route='user.register') }} {{_("if you don’t have one.")}}</p>
+      {% endif %}
+
+      {% if h.nap_theme_get_reset_password_feature_flag() %}
+        <h3 class="govuk-heading-m">{{_("Problems signing in?")}}</h3>
+        <p class="govuk-body">{{ h.nav_link(_('I have forgotten my password'), named_route='user.request_reset') }}</p>
+      {% endif %}
+    </div>
+  </section>
+{% endblock %}

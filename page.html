@@ -1,0 +1,100 @@
+{% ckan_extends %}
+
+{% set session_ns = namespace() %}
+
+{% block skip %}
+{% endblock %}
+{% macro sentence_case(text) %}
+{{ text[0]|upper}}{{text[1:] }}
+{% endmacro %}
+{% block title %}{{ _('Find road transport data service - Department for Transport - GOV.UK') }}{% endblock %}
+{% block content %}
+<div class="govuk-width-container ">
+  <div class="govuk-phase-banner">
+    <p class="govuk-phase-banner__content">
+      <strong class="govuk-tag govuk-phase-banner__content__tag">
+        {{ _('beta') }}
+      </strong>
+      <span class="govuk-phase-banner__text">
+        {{ _('This is a new service – your') }} 
+        <a 
+          class="govuk-link" 
+          href={% block feedback_url %}"https://forms.gle/XNz5z42gz3Hk18T29"{% endblock %}
+        >
+          {{ _('feedback') }}
+        </a> 
+        {{ _('will help us to improve it.') }}
+      </span>
+    </p>
+  </div>
+
+  {% block breadcrumb %}
+  {% if self.breadcrumb_content() | trim %}
+  <div class="govuk-breadcrumbs ">
+    <ol class="govuk-breadcrumbs__list">
+      <li class="govuk-breadcrumbs__list-item">
+        <a 
+            class="govuk-breadcrumbs__link" 
+            href="{{ h.url_for('home.index') }}" 
+            aria-label="{{ _('Home') }}"
+        >
+          {{ _('Home') }}
+        </a>
+      </li>
+      {% block breadcrumb_content %}{% endblock %}
+
+    </ol>
+  </div>
+  {% endif %}
+  {% endblock %}
+
+  <main class="govuk-main-wrapper" id="main-content" role="main">
+    {% block main_content%}
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-full">
+        {% block main_section_content%}
+        <h1 class="govuk-heading-xl">{% block page_heading %} {% endblock %}</h1>
+        <div class="govuk-width-container">
+          <main class="govuk-main-wrapper govuk-main-wrapper--l" id="main-content" role="main">
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-two-thirds">
+                {% set session_ns.flash = h.flash.pop_messages() %}
+                {% if session_ns.flash %}
+                  {% set session_ns.last_flash = '' %}
+                  {% for message in session_ns.flash | list %}
+                    {% if session_ns.last_flash != message %}
+                      <h1 class="govuk-heading-l">
+                        {{ h.literal(message) | replace(_("Unauthorized to create a package"), _("You have not yet been approved to add metadata entries")) }}
+                      </h1>
+                    {% endif %}
+                    {% set session_ns.last_flash = message %}
+                  {% endfor %}
+                  <p class="govuk-body">
+                    {{ _('You can') }} <a href="/" class="govuk-link">{{ _('go to the home page') }} </a>.
+                  </p>
+                {% else %}
+                  <h1 class="govuk-heading-l">{{ _('Page not found') }} </h1>
+                  <p class="govuk-body">
+                    {{ _('If you typed the web address, check it is correct.') }} </p>
+                  <p class="govuk-body">
+                    {{ _('If you pasted the web address, check you copied the entire address.') }} 
+                  </p>
+                  <p class="govuk-body">
+                    {{ _('You can try to') }}  <a href="/" class="govuk-link">{{ _('go to the home page') }} </a>.
+                  </p>
+                {% endif %}
+              </div>
+            </div>
+          </main>
+        </div>
+        {% endblock %}
+      </div>
+      <div class="govuk-grid-column-one-third">
+        {% block sub_section_content%}
+        {% endblock %}
+      </div>
+    </div>
+    {% endblock %}
+  </main>
+</div>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends "page.html" %}
+{% block title %}Administrator dashboard - {{ super() }}{% endblock %}
+{% block breadcrumb_content %}
+<li class="govuk-breadcrumbs__list-item">{{ _('Administrator dashboard') }}</li>
+{% endblock %}
+{% block main_section_content %}
+<h1 class="govuk-heading-l">{{_('Administrator dashboard')}}</h1>
+<div class="govuk-grid-row">
+  {% snippet 'user/snippets/admin_links.html', current_page = 'admin_rejected'%}
+  <div class="govuk-grid-column-two-thirds">
+    <h2 class="govuk-heading-m">{{_("Rejected data publishers")}} ({{users | length}})</h2>
+    {% for user in users %}
+    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+    {% snippet 'user/snippets/user_application.html', user=user %}
+    {% endfor %}
+    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+  </div>
+</div>
+{% endblock %}

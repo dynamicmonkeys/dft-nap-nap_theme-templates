@@ -1,0 +1,31 @@
+{% extends "page.html" %}
+{% block title %}Administrator dashboard - {{ super() }}{% endblock %}
+{% block breadcrumb_content %}
+<li class="govuk-breadcrumbs__list-item">{{ _('Administrator dashboard') }}</li>
+{% endblock %}
+{% block main_section_content %}
+<h1 class="govuk-heading-l">{{_('Administrator dashboard')}}</h1>
+<div class="govuk-grid-row">
+  {% snippet 'user/snippets/admin_links.html', current_page = 'admin_applications'%}
+  <div class="govuk-grid-column-two-thirds">
+    <h2 class="govuk-heading-m">{{_("Data publisher applications")}} ({{users | length}})</h2>
+    {% for user in users %}
+    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+    {% snippet 'user/snippets/user_application.html', user=user %}
+    <div class="govuk-button-group">
+      <a data-prevent-double-click="true" class="govuk-button govuk-!-margin-bottom-2"
+        data-module="govuk-button" href="{{ h.url_for('nap_theme.admin_approve_application', id=user.id) }}"
+        role="button">
+        {{_("Approve")}}
+      </a>
+      <a data-prevent-double-click="true" class="govuk-button govuk-button--warning govuk-!-margin-bottom-2"
+        data-module="govuk-button" href="{{ h.url_for('nap_theme.admin_reject_application', id=user.id) }}"
+        role="button">
+        {{_("Reject")}}
+      </a>
+    </div>
+    {% endfor %}
+    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+  </div>
+</div>
+{% endblock %}

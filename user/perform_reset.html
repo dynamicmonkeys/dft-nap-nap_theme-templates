@@ -1,0 +1,56 @@
+{% ckan_extends %}
+
+{% block breadcrumb_content %}
+    <li class="govuk-breadcrumbs__list-item">{{ h.nav_link(_('Sign in'), named_route='user.login') }}</li>
+    <li class="govuk-breadcrumbs__list-item">{{ _('Password reset') }}</li>
+{% endblock %}
+
+{% block title %}Reset password - {{ super() }}{% endblock %}
+{% block main_section_content %}
+<section class="module">
+    <div class="module-content">
+        {% if error_summary%}
+          <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="govuk-error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">
+              There is a problem
+            </h2>
+            <div class="govuk-error-summary__body">
+              <ul class="govuk-list govuk-error-summary__list">
+                {% for error_message in error_summary%}
+                <li>
+                  <a href="#field-email">{{error_message }}</a>
+                </li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+        {% endif %}
+    {% block form %}
+    {% if error_summary %}
+        <div class="govuk-form-group govuk-form-group--error">
+    {% else %}
+        <div class="govuk-form-group">
+    {% endif %}
+        <form action="{{ action }}" method="post">
+            <h1 class="govuk-heading-xl govuk-!-margin-bottom-6">
+                {{_("Change your password")}}
+            </h1>
+            
+            <label class="govuk-label govuk-label" for="field-password">
+            {{_("Create a new password")}}
+            </label>
+            <span class="govuk-caption-m">{{_("Passwords must be at least 12 characters long. Do not re-use passwords used for other accounts.")}}</span>
+            <input class="govuk-input" id="field-password" name="password1" type="password" autofocus>
+
+            <label class="govuk-label govuk-label govuk-!-margin-top-5" for="field-confirm-password">
+                {{_("Confirm your new password")}}
+            </label>
+            <input class="govuk-input" id="field-confirm-password" name="password2" type="password" autofocus>
+
+            <button class="govuk-button govuk-!-margin-top-4" data-module="govuk-button" type="submit">{{ _('Change your password') }}</button>
+        </form>
+    </div>
+    {% endblock %}
+    </div>
+</section>
+{% endblock %}

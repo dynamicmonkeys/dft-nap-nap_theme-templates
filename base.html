@@ -1,0 +1,57 @@
+{% ckan_extends %}
+{% block htmltag %}
+<html lang="en" class="govuk-template ">
+{% endblock %}
+{% block meta %}
+  {{ super() }}
+  <!-- Google Analytics-->
+  <!-- Google Tag Manager (noscript) -->
+  <noscript>
+    <iframe src="https://www.googletagmanager.com/ns.html?id=G-0Y2NDY266Z" height="0" width="0" style="display:none;visibility:hidden"></iframe>
+  </noscript>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-0Y2NDY266Z"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-0Y2NDY266Z');
+    gtag('config', 'UA-187308184-1');
+    gtag('gtm.start', new Date().getTime(), {'event':'gtm.js'});
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.Cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <!-- End Google Analytics-->
+
+  <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-TQDBGHF');</script>
+  <!-- End Google Tag Manager -->
+  
+  <!-- Hotjar Tracking Code for http://35.244.144.197/ -->
+  <script>
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:2291872,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+  </script>
+  <!-- End Hotjar -->
+
+{% endblock %}
+{% block styles %}
+	{% asset 'nap_theme/govuk_css' %}
+  {% asset 'nap_theme/nap_css' %}
+{% endblock %}
+{% block bodytag %}
+class="govuk-template__body"
+{% endblock %}
+{% block scripts %}
+  {% asset 'nap_theme/govuk_js' %}
+  {% asset 'nap_theme/nap_js' %}
+  {{ super() }}
+{% endblock %}

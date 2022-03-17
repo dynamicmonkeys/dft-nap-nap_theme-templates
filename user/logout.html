@@ -1,0 +1,16 @@
+{% ckan_extends %}
+
+{% block title %} {{ _('Signed out') }} - {{ super() }} {% endblock %}
+
+{% block breadcrumb_content %}
+  <li class="govuk-breadcrumbs__list-item"><a>{{ _('Signed out') }}</a></li>
+{% endblock %}
+
+{% block main_section_content %}
+  <section class="module">
+    <div class="module-content">
+      <h1 class="govuk-heading-xl">{% block page_heading %}{{ _('Signed out') }}{% endblock %}</h1>
+      <p class="govuk-body">{{ _('You have successfully signed out.') }}</p>
+    </div>
+  </section>
+{% endblock %}

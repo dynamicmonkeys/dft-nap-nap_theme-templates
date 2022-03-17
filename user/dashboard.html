@@ -1,0 +1,148 @@
+{% ckan_extends %}
+
+{% set user_packages = h.nap_theme_get_user_with_datasets(c.userobj).datasets %}
+{% set not_authorised_user = not h.organizations_available('create_dataset') and not h.check_config_permission('ckan.auth.create_unowned_dataset') %}
+
+{% block feedback_url %}
+  "https://docs.google.com/forms/d/e/1FAIpQLSdwxlCh68SO5yRHuhHZcDKgHR7oNrCizNfp-a8xwQ48peQbzA/viewform"
+{% endblock %}
+
+{% block breadcrumb_content %}
+  {% if 'register' in request.referrer %}
+  <li class="govuk-breadcrumbs__list-item"><a>{{ _('Register') }}</a></li>
+  {% endif %}
+{% endblock %}
+{% block title %}
+  {% if 'register' in request.referrer %}
+  Account registration
+  {% else %}
+  Your metadata entries - {{ super() }}
+  {% endif %}
+{% endblock %}
+{% block main_section_content %}
+{% if not_authorised_user %}
+  <section class="module">
+    <div class="module-content">
+      {% if 'register' in request.referrer %}
+      {% set response = h.nap_theme_send_application_submitted_email(c.userobj) %}
+      <div class="govuk-panel govuk-panel--confirmation">
+        <h1 class="govuk-panel__title">
+          Account application submitted
+        </h1>
+      </div>
+      <p class="govuk-body">
+        {{ _("Your account application has been submitted and will be reviewed by the team before you are allowed to create metadata entries.")}}
+      </p>
+      <p class="govuk-body">
+        {{ _("You will receive an email confirming the decision on your application within 5 working days.")}}
+      </p>
+      {% else %}
+        <h1 class="govuk-heading-l">
+          {{ _("You have not yet been approved to add metadata entries") }}
+        </h1>
+      {% endif %}
+      <div class="govuk-form-group">
+          <a 
+            data-prevent-double-click="true" 
+            class="govuk-button" 
+            data-module="govuk-button" 
+            href="/"
+            role="button"
+          >
+            {{_('Return to the homepage')}}
+          </a>
+       </div>      
+    </div>
+  </section>
+{% else %}
+  <section class="module">
+    <div class="module-content">
+      <h1 class="govuk-heading-xl govuk-!-margin-bottom-6">
+      {% block page_heading %}
+        {{_('Your metadata entries') }}
+      {% endblock %}
+      </h1>
+      <h2 class="govuk-heading-l govuk-!-margin-bottom-0">{{_("Create a metadata entry so people can find your data")}}</h2>
+      <span class="govuk-caption-l govuk-!-margin-top-0 govuk-!-margin-bottom-2">{{_("Tell us about your dataset and where it is so we can help people find it")}}</span>
+      <a 
+        data-prevent-double-click="true" 
+        class="govuk-button govuk-!-margin-bottom-2 govuk-!-margin-top-2" 
+        data-module="govuk-button" 
+        href="{{ h.url_for('dataset.new') }}"
+        role="button"
+      >
+          {{_('Create metadata entry')}}
+      </a>
+    </div>
+  </section>
+  <section class="module govuk-body govuk-!-margin-top-5 govuk-!-margin-bottom-8">
+    <p class="govuk-body govuk-!-font-weight-bold">
+      {{_("Your published metadata entries ")}}
+      <span> ({{user_packages|length}}) </span>
+    </p>
+    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+    {% block package_search_results_list %}
+      {% snippet 'user/snippets/package_list.html', packages=user_packages %}
+    {% endblock %}
+  </section>
+
+  <section class="govuk-!-margin-bottom-8">
+    <h3 class="govuk-heading-m">
+      {{_("What is a metadata entry?")}}
+    </h3>
+    <p class="govuk-body">
+      {{_("This catalogue does not hold data. It is a list of entries about data that is stored elsewhere. The metadata entries describe: ")}}
+    </p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>{{_("What is in a dataset")}}</li>
+      <li>{{_("Where you can find a dataset")}}</li>
+      <li>{{_("Who can access the dataset and how")}}</li>
+    </ul>
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+    <h3 class="govuk-heading-m">
+      {{_("What if my data is not published online?")}}
+    </h3>
+    <p class="govuk-body">
+      {{_("You can create a metadata entry for a dataset that is not yet available or published online. You will need to provide contact details so that people can contact you if they want to access your dataset.")}}
+    </p>
+    <p class="govuk-body">
+      {{_("You can decide: ")}}
+    </p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>{{_("Who is able to access your dataset")}}</li>
+      <li>{{_("What your dataset can be used for")}}</li>
+      <li>{{_("What you need in return for people accessing your dataset")}}</li>
+    </ul>
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+    <h3 class="govuk-heading-m">
+      {{_("What if my dataset is poor quality?")}}
+    </h3>
+    <p class="govuk-body">
+      {{_("Your dataset may be useful for someone, even if you consider your dataset to be in poor condition. For example, you might think your dataset is incomplete or unreliable because of how the data was collected. You should still create a metadata entry so people can contact you if they think it will be useful.")}}
+    </p>
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+    <h3 class="govuk-heading-m">
+      {{_("What happens if I create a metadata entry?")}}
+    </h3>
+    <p class="govuk-body">
+      {{_("If you create a metadata entry, you will need to: ")}}
+    </p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>{{_("Identify a named contact who can respond to queries about your dataset")}}</li>
+      <li>{{_("Provide contact details for this named contact")}}</li>
+      <li>{{_("Update your metadata entry if you make changes to your dataset")}}</li>
+    </ul>
+    <p class="govuk-body">
+      {{_("Changes to your dataset may include a change of: ")}}
+    </p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>{{_("The type of data included in your dataset")}}</li>
+      <li>{{_("The time period covered by your dataset")}}</li>
+      <li>{{_("The location of your dataset")}}</li>
+      <li>{{_("The format of your dataset")}}</li>
+    </ul>
+  </section>
+{% endif %}
+{% endblock %}
+
+

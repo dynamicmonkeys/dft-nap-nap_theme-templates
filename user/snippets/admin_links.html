@@ -1,0 +1,36 @@
+{#
+Displays a list of admin options as links
+#}
+<div class="govuk-grid-column-one-third">
+    <h3 class="govuk-heading-s">{{_("Sections")}}</h3>
+    <ul class="govuk-list">
+        <li class="govuk-!-margin-bottom-4">
+            {% if current_page == 'admin_applications' %}
+            <a class="govuk-link govuk-!-font-weight-bold" href="#">{{_("Data publisher applications")}}</a>
+            {% else %}
+            <a class="govuk-link" href="{{h.url_for('nap_theme.admin_applications')}}">{{_("Data publisher applications")}}</a>
+            {% endif %}
+        </li>
+        <li class="govuk-!-margin-bottom-4">
+            {% if current_page == 'admin_approved' %}
+            <a class="govuk-link govuk-!-font-weight-bold" href="#">{{_("Approved data publishers")}}</a>
+            {% else %}
+            <a class="govuk-link" href="{{h.url_for('nap_theme.admin_approved')}}">{{_("Approved data publishers")}}</a>
+            {% endif %}
+        </li>
+        <li class="govuk-!-margin-bottom-4">
+            {% if current_page == 'admin_rejected' %}
+            <a class="govuk-link govuk-!-font-weight-bold" href="#">{{_("Rejected data publishers")}}</a>
+            {% else %}
+            <a class="govuk-link" href="{{h.url_for('nap_theme.admin_rejected')}}">{{_("Rejected data publishers")}}</a>
+            {% endif %}
+        </li>
+        <li class="govuk-!-margin-bottom-4">
+            {% if current_page == 'admin_admins' %}
+            <a class="govuk-link govuk-!-font-weight-bold" href="#">{{_("Admin users")}}</a>
+            {% else %}
+            <a class="govuk-link" href="{{h.url_for('nap_theme.admin_admins')}}">{{_("Admin users")}}</a>
+            {% endif %}
+        </li>
+    </ul>
+</div>

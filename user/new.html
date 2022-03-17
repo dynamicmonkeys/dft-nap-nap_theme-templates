@@ -1,0 +1,19 @@
+{% ckan_extends %}
+
+{% block breadcrumb_content %}
+  <li class="govuk-breadcrumbs__list-item">{{ h.nav_link(_('Register'), named_route='user.register') }}</li>
+{% endblock %}
+{% set error_summary = h.flash.pop_messages() | list%}
+
+{% block title %}Create an account- {{ super() }}{% endblock %}
+{% block main_section_content %}
+<section class="module">
+  <div class="govuk-grid-column-two-thirds">
+    <div class="module-content">
+      {% block form %}
+        {{ form | safe }}
+      {% endblock %}
+    </div>
+  </div>
+</section>
+{% endblock %}

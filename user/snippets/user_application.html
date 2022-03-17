@@ -1,0 +1,108 @@
+{#
+    Displays a single user application.
+    
+    user       - A user appliation to display.
+    
+    Note: Organisation is stored in image_url
+    
+    Example:
+    
+      {% snippet 'snippets/user_applcation.html', user=users[1] %}
+    
+#}
+
+<dl class="govuk-summary-list govuk-summary-list--no-border govuk-!-margin-bottom-2">
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key govuk-!-padding-0 govuk-!-padding-bottom-1">
+      {{_("Name:")}}
+    </dt>
+    <dd class="govuk-summary-list__value govuk-!-padding-0 govuk-!-padding-bottom-1">
+      {{user.fullname}}
+    </dd>
+  </div>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key govuk-!-padding-0 govuk-!-padding-bottom-1">
+      {{_("Email address:")}}
+    </dt>
+    <dd class="govuk-summary-list__value govuk-!-padding-0 govuk-!-padding-bottom-1">
+      {{user.email}}
+    </dd>
+  </div>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key govuk-!-padding-0 govuk-!-padding-bottom-1">
+      {{_("Username:")}}
+    </dt>
+    <dd class="govuk-summary-list__value govuk-!-padding-0 govuk-!-padding-bottom-1">
+      {{user.name}}
+    </dd>
+  </div>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key govuk-!-padding-0 govuk-!-padding-bottom-1">
+      {{_("Organisation:")}}
+    </dt>
+    <dd class="govuk-summary-list__value govuk-!-padding-0 govuk-!-padding-bottom-1">
+      {{user.image_url}}
+    </dd>
+  </div>
+  {% if user.plugin_extras %}
+    {% set pe = user.plugin_extras['nap_theme']%}
+    {% if pe['approved_on'] %}
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key govuk-!-padding-0 govuk-!-padding-bottom-1">
+        {{_("Approved on:")}}
+      </dt>
+      <dd class="govuk-summary-list__value govuk-!-padding-0 govuk-!-padding-bottom-1">
+        {{h.nap_theme_get_date_time_formatted(pe['approved_on'],'%d/%m/%Y %H:%M')}}
+      </dd>
+    </div>
+    {% endif %}
+    {% if pe['approved_by'] %}
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key govuk-!-padding-0 govuk-!-padding-bottom-1">
+        {{_("Approved by:")}}
+      </dt>
+      <dd class="govuk-summary-list__value govuk-!-padding-0 govuk-!-padding-bottom-1">
+        {{pe['approved_by']}}
+      </dd>
+    </div>
+    {% endif %}
+    {% if pe['rejected_on'] %}
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key govuk-!-padding-0 govuk-!-padding-bottom-1">
+        {{_("Rejected on:")}}
+      </dt>
+      <dd class="govuk-summary-list__value govuk-!-padding-0 govuk-!-padding-bottom-1">
+        {{h.nap_theme_get_date_time_formatted(pe['rejected_on'],'%d/%m/%Y %H:%M')}}
+      </dd>
+    </div>
+    {% endif %}
+    {% if pe['rejected_by'] %}
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key govuk-!-padding-0 govuk-!-padding-bottom-1">
+        {{_("Rejected by:")}}
+      </dt>
+      <dd class="govuk-summary-list__value govuk-!-padding-0 govuk-!-padding-bottom-1">
+        {{pe['rejected_by']}}
+      </dd>
+    </div>
+    {% endif %}
+    {% if pe['reject_message'] %}
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key govuk-!-padding-0 govuk-!-padding-bottom-1">
+        {{_("Reject Message:")}}
+      </dt>
+      <dd class="govuk-summary-list__value govuk-!-padding-0 govuk-!-padding-bottom-1">
+        {{pe['reject_message']}}
+      </dd>
+    </div>
+    {% endif %}
+  {% endif %}
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key govuk-!-padding-0 govuk-!-padding-bottom-1 govuk-!-font-size-16 nap-alt-color">
+      {{_("Application submitted:")}}
+    </dt>
+    <dd class="govuk-summary-list__value govuk-!-padding-0 govuk-!-padding-bottom-1 govuk-!-font-size-16 nap-alt-color">
+      {{h.nap_theme_get_date_time_formatted(user.created,'%d/%m/%Y %H:%M')}}
+    </dd>
+  </div>
+</dl>

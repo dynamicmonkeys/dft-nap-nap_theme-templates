@@ -1,0 +1,29 @@
+{% ckan_extends %}
+{% block feedback_url %}
+  "https://docs.google.com/forms/d/e/1FAIpQLSfIN7VaGA0VBZbDauSp-QIXOX9LQ4xVhrruzrq_acOQWGWRgA/viewform"
+{% endblock %}
+
+{% block title %}Create metadata entry - {{ super() }}{% endblock %}
+{{error_summary}}
+{% set form_data = h.nap_theme_get_form_data(form_vars["data"],{}) %}
+{% set error_summary = h.nap_theme_get_sorted_error_summary(form_vars["error_summary"]) %}
+
+
+{% block main_section_content %}
+  <section class="module">
+    <div class="module-content">
+      <h1 class="govuk-heading-xl govuk-!-margin-bottom-6">
+        {% block page_heading %}
+          {{ _('Create a metadata entry so people can find your dataset') }}
+        {% endblock %}
+      </h1>
+      {% if not h.organizations_available('create_dataset') and not h.check_config_permission('ckan.auth.create_unowned_dataset') %}
+        <p class='govuk-body'>{{ _('You have not yet been approved to add metadata entries') }}</p>
+      {% else %}      
+        {% block form %}
+          {% snippet "package/snippets/dataset_form.html", action=g.form_action, error_summary=error_summary, form_data=form_data %}
+        {% endblock %}
+      {% endif  %}
+    </div>
+  </section>
+{% endblock %}
