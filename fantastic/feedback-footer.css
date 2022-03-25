@@ -1,0 +1,43 @@
+#footer {
+    background-color: #f3f2f1;
+    border-top: 10px solid #1d70b8;
+}
+.footer-feedback-container {
+    margin-top: 60px;
+    border-bottom: 1px solid #fff;
+    background-color: #1d70b8;
+}
+.feedback-footer-buttons {
+    padding: 25px 25px 25px 25px;
+    
+}
+.feedback-label{
+    line-height: 2.0;
+    color: #fff;
+    margin: 10px 20px;
+}
+.feedback-button {
+    border: 1px #fff solid;
+    background-color: transparent;
+    border-bottom: 1px solid #fff;
+    min-width: 100px;
+    margin-bottom: 0;
+    box-shadow: 0 2px 0 #fff;
+}
+
+.feedback-button:hover {
+    background: rgba(11,12,12,0.2);
+}
+
+.feedback-link {
+    float: right;
+}
+
+.feeedback-message {
+    color: #fff;
+    margin-bottom: 0;
+}
+
+.js-hidden {
+    display: none;
+}
