@@ -12,6 +12,7 @@ function setCookie(name, value) {
 function eraseCookie(name) {   
   document.cookie = `${name}=; path=/; max-age=-99999999;`;  
 }
+
 function getCookie(name) {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);
