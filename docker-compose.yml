@@ -56,7 +56,7 @@ services:
       - DATAPUSHER_REWRITE_URL=${DATAPUSHER_REWRITE_URL}
   db:
     container_name: db
-    image: dft-nap-postgres
+    image: radicalgeektechnology/dft-nap-postgres
     networks:
       - backend
     environment:
@@ -69,7 +69,7 @@ services:
       test: ["CMD", "pg_isready", "-U", "ckan"]
   solr:
     container_name: solr
-    image: dft-nap-solr
+    image: radicalgeektechnology/dft-nap-solr
     networks:
       - backend
     volumes:
