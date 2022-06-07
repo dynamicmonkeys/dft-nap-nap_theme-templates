@@ -1,9 +1,37 @@
-FROM radicalgeektechnology/ckan:2.9.2
+    ###################
+    ### Extensions ####
+    ###################
+    FROM keitaro/ckan:2.9.2 as extbuild
 
-COPY fanstatic /usr/lib/ckan/default/src/ckanext-nap_theme/ckanext/nap_theme/fanstatic/
-COPY templates  /usr/lib/ckan/default/src/ckanext-nap_theme/ckanext/nap_theme/templates/
-COPY webassets /tmp/webassets/
+    # Switch to the root user
+    USER root
+    # Change the repo to be the NAP Theme REPO!!!
+    # We need to install the requirments speciaclly for Gov Notify which is specifed in the requirements.txt
+    COPY requirements.txt ./
+    COPY src /srv
+    RUN pip wheel --wheel-dir=/wheels -r ./requirements.txt
 
-#WORKDIR /usr/lib/ckan/default/src/ckanext-nap_theme
-#RUN /bin/bash -c 'pip3 install -r requirements.txt; python3 setup.py develop; supervisorctl reload'
-#RUN /bin/bash -c 'service nginx stop; rm -r /tmp/nginx_cache/; service nginx start'
+
+    ############
+    ### MAIN ###
+    ############
+    FROM keitaro/ckan:2.9.2
+
+    # Add the custom extensions to the plugins list
+    ENV CKAN__PLUGINS envvars image_view text_view recline_view datastore datapusher nap_theme
+
+    # Switch to the root user
+    USER root
+    
+    COPY --from=extbuild /wheels /srv/app/ext_wheels
+
+    # Install and enable the custom extensions
+    #RUN pip install ckanext-nap_theme && \
+    RUN pip install --no-index --find-links=/srv/app/ext_wheels ckanext-nap_theme && \
+        pip install --no-index --find-links=/srv/app/ext_wheels notifications-python-client && \
+        ckan config-tool ${APP_DIR}/production.ini "ckan.plugins = ${CKAN__PLUGINS}" && \
+        ckan config-tool ${APP_DIR}/production.ini "ckanext.nap_theme.gov_notify_key = ckanteam-434371f5-3850-4f7b-92d0-b64651438044-fcbf118c-be66-4234-9e53-3bc092c8368a" && \
+        chown -R ckan:ckan /srv/app
+    
+    # Switch to the ckan user
+    USER ckan
