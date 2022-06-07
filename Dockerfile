@@ -7,9 +7,13 @@
     USER root
     # Change the repo to be the NAP Theme REPO!!!
     # We need to install the requirments speciaclly for Gov Notify which is specifed in the requirements.txt
-    COPY requirements.txt ./
+    #RUN pip wheel --wheel-dir=/wheels -r https://github.com/departmentfortransport/ckanext-dftnap/blob/master/beta/ckanext/ckanext-nap_theme/requirements.txt
+    #RUN curl -o /srv/requirements.txt https://raw.githubusercontent.com/andy-eagle/ckanext-nap_theme/main/requirements.txt?token=GHSAT0AAAAAABQY2WPBJPIIAK3BNWL7PFRWYQFH56Q
+    RUN mkdir tmp
+    COPY requirements.txt /srv/requirements.txt
     COPY src /srv
-    RUN pip wheel --wheel-dir=/wheels -r ./requirements.txt
+    RUN pip wheel --wheel-dir=/wheels /srv
+    RUN pip wheel --wheel-dir=/wheels -r /srv/requirements.txt
 
 
     ############
