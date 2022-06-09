@@ -39,3 +39,5 @@
     
     # Switch to the ckan user
     USER ckan
+
+   

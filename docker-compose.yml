@@ -11,6 +11,7 @@ volumes:
 services:
   ckan:
     container_name: ckan
+    tty: true
     build:
       context: .
       dockerfile: Dockerfile
@@ -65,6 +66,7 @@ services:
       - PGDATA=/var/lib/postgresql/data/db
     volumes:
       - pg_data:/var/lib/postgresql/data
+      - ./seed_data:/docker-entrypoint-initdb.d/seed/
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "ckan"]
   solr:
