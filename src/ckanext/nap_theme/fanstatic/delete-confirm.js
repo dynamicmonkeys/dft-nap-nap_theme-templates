@@ -1,11 +1,13 @@
 function openDeleteConfirm(target_id) {
     deleteConfirmContainer = document.getElementById(target_id);
     deleteConfirmContainer.style.maxHeight = deleteConfirmContainer.scrollHeight + "px";
+    deleteConfirmContainer.style.visibility = "visible";
 }
 
 function closeDeleteConfirm(target_id) {
     deleteConfirmContainer = document.getElementById(target_id);
     deleteConfirmContainer.style.maxHeight = null;
+    deleteConfirmContainer.style.visibility = "hidden";
 }
 
 window.addEventListener("DOMContentLoaded", function () {

@@ -147,22 +147,19 @@ Example:
       <div class="nap-delete-confirm-container govuk-!-padding-5 govuk-!-margin-top-7 govuk-!-margin-bottom-5">
         <form id="confirm-dataset-delete-form" class="confirm-delete-form">
           <input type="hidden" id="deleteId{{package.id}}" name="id" value="{{package.id}}">
-
-          <fieldset class="govuk-fieldset">
-            <label class="govuk-label" for="delete-confirm">
-              <h3 class="govuk-heading-m">
-                {{_("Deleting this metadata entry is permanent and can't be undone.")}}
-              </h3>
-            </label>
-            <div class="govuk-button-group" id="delete-confirm">
-              <button class="govuk-button govuk-button--secondary govuk-!-margin-right-3" data-module="govuk-button" type="button" onclick='closeDeleteConfirm("delete-confirm-{{package.id}}")'>
-                {{_("Cancel")}}
-              </button>
-              <button class="govuk-button govuk-button--warning" type="submit" data-module="govuk-button" data-dataset="{{package.id}}">
-                {{_("Delete metadata entry")}}
-              </button>
-            </div>
-          </fieldset>
+          <label class="govuk-label" for="delete-confirm">
+            <h4 class="govuk-heading-m">
+              {{_("Deleting this metadata entry is permanent and can't be undone.")}}
+            </h4>
+          </label>
+          <div class="govuk-button-group" id="delete-confirm">
+            <button class="govuk-button govuk-button--secondary govuk-!-margin-right-3" data-module="govuk-button" type="button" onclick='closeDeleteConfirm("delete-confirm-{{package.id}}")'>
+              {{_("Cancel")}}
+            </button>
+            <button class="govuk-button govuk-button--warning" type="submit" data-module="govuk-button" data-dataset="{{package.id}}">
+              {{_("Delete metadata entry")}}
+            </button>
+          </div>
         </form>
       </div>
     </div>
