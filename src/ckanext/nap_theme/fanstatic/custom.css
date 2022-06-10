@@ -80,7 +80,7 @@
 .nap-delete-confirm-collapser{
   max-height: 0px;
   overflow: hidden;
-
+  visibility: hidden;
   transition: max-height .25s ease-in-out;
 }
 
